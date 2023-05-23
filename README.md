@@ -19,7 +19,7 @@ The code is splitted into 11 modules
   8. **SG_rule** module to create ingress and egress rules in SG to allow or disallow traffic.
   9. **load_balancer** module to create load-balancer to handel the traffic between thw ec2 instances.
   10. **s3-bucket** module to create s3 bucket.
-  11 **dynamodb** module to create dynamodb table.
+  11. **dynamodb** module to create dynamodb table.
 
 
 # Note
