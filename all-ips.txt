@@ -1,0 +1,9 @@
+
+public_IP: 44.201.181.77
+private_IP: 10.0.0.192
+public_IP: 54.234.172.252
+private_IP: 10.0.2.146
+public_IP:
+private_IP: 10.0.3.13
+public_IP:
+private_IP: 10.0.1.113
