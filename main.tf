@@ -130,19 +130,20 @@ module "lb_SG_rules" {
   SG_id             = module.lb_SG.SG_id
 }
 
-module "pub-lb" {
+module "lb" {
   source                            = "./load_balancer"
+  count                             = length(var.lb_name)
 
   # lb Variables
-  lb_name                           = var.lb_name[0]
-  lb_internal                       = var.lb_internal[0]
+  lb_name                           = var.lb_name[count.index]
+  lb_internal                       = var.lb_internal[count.index]
   lb_type                           = var.lb_type
   lb_security_groups                = [module.lb_SG.SG_id]
-  lb_subnets                        = module.pub-subnet[*].sub_id
+  lb_subnets                        = count.index == 0 ? module.pub-subnet[*].sub_id : module.priv-subnet[*].sub_id
   lb_ip_type                        = var.lb_ip_type
 
   # Target group Variables
-  lbtg_name                         = var.lbtg_name[0]
+  lbtg_name                         = var.lbtg_name[count.index]
   lbtg_port                         = var.lbtg_port
   lbtg_protocol                     = var.lbtg_protocol
   lbtg_target_type                  = var.lbtg_target_type
@@ -161,41 +162,6 @@ module "pub-lb" {
   lis_action_type                   = var.lis_action_type
 
   # lb target group attachment Variables
-  instances_id                      = module.pub-ec2[*].ec2_id
-  TG_port                           = var.TG_port
-}
-
-module "priv-lb" {
-  source                            = "./load_balancer"
-  
-  # lb Variables
-  lb_name                           = var.lb_name[1]
-  lb_internal                       = var.lb_internal[1]
-  lb_type                           = var.lb_type
-  lb_security_groups                = [module.lb_SG.SG_id]
-  lb_subnets                        = module.priv-subnet[*].sub_id
-  lb_ip_type                        = var.lb_ip_type
-
-  # Target group Variables
-  lbtg_name                         = var.lbtg_name[1]
-  lbtg_port                         = var.lbtg_port
-  lbtg_protocol                     = var.lbtg_protocol
-  lbtg_target_type                  = var.lbtg_target_type
-  vpc_id                            = module.vpc.vpc_id
-
-  hk_interval                       = var.hk_interval
-  hk_path                           = var.hk_path
-  hk_protocol                       = var.hk_protocol
-  hk_timeout                        = var.hk_timeout
-  hk_healthy_threshold              = var.hk_healthy_threshold
-  hk_unhealthy_threshold            = var.hk_unhealthy_threshold
-
-  #lb Listener Variables            =
-  lis_port                          = var.lis_port
-  lis_protocol                      = var.lis_protocol
-  lis_action_type                   = var.lis_action_type
-
-  # lb target group attachment Variables
-  instances_id                      = module.priv-ec2[*].ec2_id
+  instances_id                      = count.index == 0 ? module.pub-ec2[*].ec2_id : module.priv-ec2[*].ec2_id
   TG_port                           = var.TG_port
 }
