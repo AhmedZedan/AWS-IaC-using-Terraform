@@ -77,6 +77,11 @@ module "ami" {
   ami_owner      = var.ami_owner 
 }
 
+module "nginx_proxy" {
+  source = "./local_files"
+  internal_lb_dns_name = module.lb[1].elb_dns_name
+}
+
 module "pub-ec2" {
   source              = "./ec2_public"
   count               = length(var.pub-ec2-name)
@@ -87,12 +92,8 @@ module "pub-ec2" {
   subnet_id           = module.pub-subnet[count.index].sub_id
   SG_id               = module.ec2_SG.SG_id
 
-  # provisioner "file" variables
-  file_source         = var.file_source
-  destination         = var.destination
-
-  #provisioner "remote-exec" variables
-  inline              = var.inline
+  # provisioner "file" variable
+  script              = module.nginx_proxy.proxy_file_name
 
   #provisioner connection variables
   type                = var.type

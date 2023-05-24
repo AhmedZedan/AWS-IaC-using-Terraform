@@ -5,12 +5,8 @@ variable "Key" {}
 variable "subnet_id" {}
 variable "SG_id" {}
 
-# provisioner "file" variables
-variable "file_source" {}
-variable "destination" {}
-
-#provisioner "remote-exec" variables
-variable "inline" {}
+# provisioner "file" variable
+variable "script" {}
 
 #provisioner connection variables
 variable "type" {}

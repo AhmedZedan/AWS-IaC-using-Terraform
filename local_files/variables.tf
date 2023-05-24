@@ -1,0 +1,1 @@
+variable "internal_lb_dns_name" {}

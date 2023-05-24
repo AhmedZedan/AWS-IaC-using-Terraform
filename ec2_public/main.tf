@@ -14,23 +14,17 @@ resource "aws_instance" "ec2" {
   }
 
   # nginx installation
-  # storing the nginx.sh file in the EC2 instnace
-  provisioner "file" {
-    source      = var.file_source
-    destination = var.destination
-  }
-
-  # Exicuting the nginx.sh file
+  # Exicuting the nginx_proxy.sh file
   provisioner "remote-exec" {
-    inline = var.inline
-  }
+    script = "./${var.script}"
 
-  # Setting up the ssh connection to install the nginx server
-  connection {
-    type        = var.type
-    host        = self.public_ip 
-    user        = var.user 
-    private_key = file(var.Private_key_path)
+    # Setting up the ssh connection to install the nginx server
+    connection {
+      type        = var.type
+      host        = self.public_ip 
+      user        = var.user 
+      private_key = file(var.Private_key_path)
+    }
   }
 
   tags = {
